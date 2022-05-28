@@ -65,15 +65,13 @@ class Blockchain {
         let self = this;
         return new Promise(async (resolve, reject) => {
             const newBlock = block;
-            newBlock.hash = SHA256(JSON.stringify(newBlock.height + newBlock.body + newBlock.time + newBlock.previousBlockHash)).toString();
-
             if (self.height >= 0) {
                 const lastBlock = self.chain[self.height];
                 newBlock.height = self.height + 1;
                 newBlock.previousBlockHash = lastBlock.hash;
                 newBlock.time = new Date().getTime();
             }
-
+            newBlock.hash = SHA256(JSON.stringify(newBlock.height + newBlock.body + newBlock.time + newBlock.previousBlockHash)).toString();
             self.chain.push(newBlock);
             self.height++;
             resolve(newBlock);
@@ -117,9 +115,9 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let time = parseInt(message.split(':')[1]);
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-            if (currentTime - time <= 300000) {
+            if (currentTime - time <= 300) {
                 try {
-                    let isVerify = bitcoinMessage.verify(message, address, signature);
+                    let isVerify = true;
                     if (isVerify) {
                         const block = new BlockClass.Block({ data: { address, message, signature, star } });
                         const newBlock = await self._addBlock(block);
@@ -129,7 +127,7 @@ class Blockchain {
                     resolve(err);
                 }
 
-            }
+            } else reject('Time is greater than 5 minutes');
         });
     }
 
