@@ -126,7 +126,7 @@ class Blockchain {
                         resolve(newBlock);
                     }
                 } catch (err) {
-                    resolve(err);
+                    reject(err);
                 }
 
             } else reject('Time is greater than 5 minutes');
