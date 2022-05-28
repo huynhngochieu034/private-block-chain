@@ -117,7 +117,7 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let time = parseInt(message.split(':')[1]);
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-            if (currentTime - time <= 300000) {
+            if (currentTime - time <= 300) {
                 try {
                     let isVerify = bitcoinMessage.verify(message, address, signature);
                     if (isVerify) {
@@ -129,7 +129,7 @@ class Blockchain {
                     resolve(err);
                 }
 
-            }
+            } else reject('Time is greater than 5 minutes');
         });
     }
 
