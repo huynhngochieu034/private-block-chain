@@ -201,7 +201,8 @@ class Blockchain {
                 }
 
             }
-            resolve(errorLog);
+            if (errorLog.length > 0) resolve(errorLog);
+            resolve('Chain is valid');
         });
     }
 
