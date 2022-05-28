@@ -71,9 +71,10 @@ class Blockchain {
                 newBlock.previousBlockHash = lastBlock.hash;
                 newBlock.time = new Date().getTime();
             }
-            newBlock.hash = SHA256(JSON.stringify(newBlock.height + newBlock.body + newBlock.time + newBlock.previousBlockHash)).toString();
+            newBlock.hash = SHA256(JSON.stringify(newBlock.height + newBlock.body + newBlock.time + newBlock.previousBlockHash)).toString();   
             self.chain.push(newBlock);
             self.height++;
+            await this.validateChain();
             resolve(newBlock);
         });
     }
@@ -117,7 +118,7 @@ class Blockchain {
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
             if (currentTime - time <= 300) {
                 try {
-                    let isVerify = true;
+                    let isVerify = bitcoinMessage.verify(message, address, signature);
                     if (isVerify) {
                         const block = new BlockClass.Block({ data: { address, message, signature, star } });
                         const newBlock = await self._addBlock(block);
