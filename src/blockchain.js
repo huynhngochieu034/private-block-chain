@@ -72,9 +72,11 @@ class Blockchain {
                 newBlock.time = new Date().getTime();
             }
             newBlock.hash = SHA256(JSON.stringify(newBlock.height + newBlock.body + newBlock.time + newBlock.previousBlockHash)).toString();   
+            
+            await this.validateChain();
+            
             self.chain.push(newBlock);
             self.height++;
-            await this.validateChain();
             resolve(newBlock);
         });
     }
